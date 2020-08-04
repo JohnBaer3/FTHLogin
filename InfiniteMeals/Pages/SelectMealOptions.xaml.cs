@@ -8,108 +8,99 @@ using System.Threading.Tasks;
 using InfiniteMeals.Meals.Model;
 using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
+using InfiniteMeals.Model.Database;
+
 
 namespace InfiniteMeals
 {
-
     public partial class SelectMealOptions : ContentPage
     {
         private int mealOrdersCount = 0;
         public string myProperty { get; } = " ";
-
-
+        UserLoginSession userSesh = new UserLoginSession();
         public ObservableCollection<MealsModel> Meals = new ObservableCollection<MealsModel>();
 
         private string foodbankID;
         private string kitchenZipcode;
         private string foodbankName;
+        private string currentFilters;
 
         private void Vegan_Clicked(object sender, System.EventArgs e)
         {
-
-
             ImageButton Vegan_Clicked = (ImageButton)sender;
             if (Vegan_Clicked.BackgroundColor.Equals(Color.Transparent))
             {
                 Vegan_Clicked.BackgroundColor = Color.FromHex("#d4af37");
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodtype/" + foodbankID + "/vegan");
+                currentFilters += "&vegan";
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
             else
             {
                 Vegan_Clicked.BackgroundColor = Color.Transparent;
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
+                currentFilters = filterOutOption("&vegan");
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
         }
 
         private void Kosher_Clicked(object sender, System.EventArgs e)
         {
-
             ImageButton Kosher_Clicked = (ImageButton)sender;
             if (Kosher_Clicked.BackgroundColor.Equals(Color.Transparent))
             {
                 Kosher_Clicked.BackgroundColor = Color.FromHex("#d4af37");
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodtype/" + foodbankID + "/Kosher");
+                currentFilters += "&kosher";
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
             else
             {
                 Kosher_Clicked.BackgroundColor = Color.Transparent;
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
+                currentFilters = filterOutOption("&kosher");
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
-
         }
 
         private void vegetarian_Clicked(object sender, System.EventArgs e)
         {
-
-
             ImageButton vegetarian_Clicked = (ImageButton)sender;
             if (vegetarian_Clicked.BackgroundColor.Equals(Color.Transparent))
             {
                 vegetarian_Clicked.BackgroundColor = Color.FromHex("#d4af37");
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodtype/" + foodbankID + "/vegetarian");
+                currentFilters += "&vegetarian";
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
             else
             {
                 vegetarian_Clicked.BackgroundColor = Color.Transparent;
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
+                currentFilters = filterOutOption("&vegetarian");
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
-
         }
 
         private void glutenfree_Clicked(object sender, System.EventArgs e)
         {
-
             ImageButton glutenfree_Clicked = (ImageButton)sender;
             if (glutenfree_Clicked.BackgroundColor.Equals(Color.Transparent))
             {
                 glutenfree_Clicked.BackgroundColor = Color.FromHex("#d4af37");
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodtype/" + foodbankID + "/gluten-free");
+                currentFilters += "&gluten";
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
             else
             {
                 glutenfree_Clicked.BackgroundColor = Color.Transparent;
-                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
+                currentFilters = filterOutOption("&gluten");
+                FindMeals(foodbankID, "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID + currentFilters);
             }
-
         }
 
-        protected async Task GetMeals(string foodbank_id, string url)
+        private String filterOutOption(String toRemove)
         {
-            NoMealsLabel.IsVisible = false;
-
-            var request = new HttpRequestMessage();
-
-            if (url == "")
-            {
-                request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
-            }
-            else
-            {
-                request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodtype/" + foodbank_id + "/vegan");
-
-            }
-
+            int positionToRemove = currentFilters.IndexOf(toRemove);
+            String updatedFilter = currentFilters.Substring(0, positionToRemove) + currentFilters.Substring(positionToRemove + toRemove.Length, currentFilters.Length - positionToRemove - toRemove.Length);
+            Console.WriteLine(updatedFilter);
+            return updatedFilter;
         }
+
 
 
         protected async Task FindMeals(string foodbank_id, string url)
@@ -120,24 +111,14 @@ namespace InfiniteMeals
 
             if (url == "")
             {
-                request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
+                request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID);
+                Console.WriteLine("Next foodbankID " + foodbank_id);
             }
             else
             {
                 request.RequestUri = new Uri(url);
+                Console.WriteLine("other url " + url);
             }
-            //foodBankNameLabel.IsVisible = true;
-            //var request = new HttpRequestMessage();
-            //request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
-            //https://phaqvwjbw6.execute-api.us-west-1.amazonaws.com/dev/api/v1/meals/" + kitchen_id
-
-
-
-            // protected async Task GetMeals(string foodbank_id)
-            //NoMealsLabel.IsVisible = false;
-
-            // var request = new HttpRequestMessage();
-            //request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbankinfo");
 
             request.Method = HttpMethod.Get;
             var client = new HttpClient();
@@ -154,68 +135,41 @@ namespace InfiniteMeals
                     todaysDate = todaysDate.Substring(1);
                 }
                 todaysDate = todaysDate.Replace("/0", "/");
-
                 this.Meals.Clear();
-
-                //Console.WriteLine("meals['result']: " + meals["result"]);
-                //Console.WriteLine("meals: " + meals);
-
-                Console.WriteLine("foodbank id ", foodbank_id);
-
-
                 foreach (var k in foodbanks["result"]["result"])
                 {
-                    if (foodbank_id == k["foodbank_id"].ToString())
+                    string cleanedUpImageString = cleanUpImageString(k["fl_image"].ToString());
+                    this.Meals.Add(new MealsModel()
                     {
-                        string foodbankID = k["food_name"].ToString();
-                        string cleanedUpImageString = cleanUpImageString(k["fl_image"].ToString());
-
-                        this.Meals.Add(new MealsModel()
-                        {
-                            title = foodbankID,
-                            imageString = cleanedUpImageString,
-                            price = k["fl_value_in_dollars"].ToString(),
-                            foodbank_id = "foodbank_id",
-                            foodbank_name = k["fb_name"].ToString(),
-                            id = "id",
-                            qty = 0
-                        }
-                        );
-
-                    }
+                        imageString = cleanedUpImageString,
+                        price = k["fl_value_in_dollars"].ToString(),
+                        foodbank_id = foodbankID,
+                        id = k["food_id"].ToString(),
+                        food_name = k["fl_name"].ToString(),
+                        qty = 0
+                    });
                 }
-
-                Console.WriteLine("meals count2 " + this.Meals.Count);
                 mealsListView.ItemsSource = Meals;
             }
-
         }
 
-        public SelectMealOptions(string foodbank_id, string foodbank_name, string zipcode)
+        public SelectMealOptions(string foodbank_id, string foodbank_name, string zipcode, UserLoginSession userLoginSession)
         {
             InitializeComponent();
+
+            userSesh = userLoginSession;
 
             SetBinding(TitleProperty, new Binding(foodbank_name));
             myProperty = foodbank_name;
             BindingContext = this;
-            foodbankID = foodbank_id;
+            Console.WriteLine("foodbank id " + foodbank_id);
+            foodbankID = "08" + foodbank_id.Substring(2) +"?"; //This is due to a formatting error in the db, "800-..." is converted to "080-..." to match the foodbank ids in the inventory_filter API
+
+            Console.WriteLine(foodbankID);
+
             kitchenZipcode = zipcode;
 
-            GetMeals(foodbankID, "");
-
-            mealsListView.RefreshCommand = new Command(() =>
-            {
-                GetMeals(foodbankID, "");
-                mealsListView.IsRefreshing = false;
-            });
-
             FindMeals(foodbankID, "");
-
-            mealsListView.RefreshCommand = new Command(() =>
-            {
-                FindMeals(foodbankID, "");
-                mealsListView.IsRefreshing = false;
-            });
         }
 
         public String cleanUpImageString(String imageString)
@@ -226,7 +180,6 @@ namespace InfiniteMeals
                 if (!(letter.Equals("?".ToCharArray()[0])))
                 {
                     cleaned += letter;
-                    Console.WriteLine(cleaned);
                 }
                 else
                 {
@@ -244,12 +197,9 @@ namespace InfiniteMeals
             }
             else
             {
-                var secondPage = new CheckOutPage(Meals, foodbankID, kitchenZipcode);
+                var secondPage = new CheckOutPage(Meals, foodbankID, kitchenZipcode, userSesh);
                 await Navigation.PushAsync(secondPage);
             }
-
-            //var checkoutPage = new CheckOutPage();
-            //await Navigation.PushAsync(checkoutPage);
         }
 
         private void reduceOrders(object sender, System.EventArgs e)

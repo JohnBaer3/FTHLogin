@@ -32,7 +32,7 @@
                             </StackLayout>
 
                             <StackLayout Orientation="Vertical" WidthRequest="200">
-                                <Label Text="{Binding title}" FontAttributes="Bold" FontSize="Default" TextColor="Black"></Label>
+                                <Label Text="{Binding food_name}" FontAttributes="Bold" FontSize="Default" TextColor="Black"></Label>
 
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="$" FontSize="Small" Margin="0,0,0,0"></Label>

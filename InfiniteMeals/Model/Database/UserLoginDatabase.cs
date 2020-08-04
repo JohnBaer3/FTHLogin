@@ -69,9 +69,5 @@ namespace InfiniteMeals.Model.Database {
             return Database.Table<UserLoginSession>().ToListAsync().Result.Last<UserLoginSession>();
             
         }
-
-
-
-       
     }
 }

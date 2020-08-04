@@ -444,7 +444,9 @@ namespace InfiniteMeals
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true); // update the login status for the app
             System.Diagnostics.Debug.WriteLine("change main page");
-            await Navigation.PushAsync(new MainPage());
+
+            var mainPage = new MainPage(userSessionInformation);
+            await Navigation.PushAsync(mainPage);
             //mainPage.updateLoginButton(); // update login button to be login / logout - not implemented
             //await Navigation.PopToRootAsync();
             await DisplayAlert("Success", "Your account was created", "OK");

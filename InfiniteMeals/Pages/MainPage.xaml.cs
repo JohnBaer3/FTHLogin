@@ -10,11 +10,14 @@ using InfiniteMeals.Kitchens.Model;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Xamarin.Forms.Internals;
+using InfiniteMeals.Model.Database;
+
 
 namespace InfiniteMeals
 {
     public partial class MainPage : ContentPage
     {
+        UserLoginSession userSesh = new UserLoginSession();
 
         ObservableCollection<KitchensModel> Kitchens = new ObservableCollection<KitchensModel>();
 
@@ -22,8 +25,6 @@ namespace InfiniteMeals
         {
             var request = new HttpRequestMessage();
             request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/foodbanks");
-            //request.RequestUri = new Uri("https://phaqvwjbw6.execute-api.us-west-1.amazonaws.com/dev/api/v1/kitchens");
-
             request.Method = HttpMethod.Get;
             var client = new HttpClient();
             HttpResponseMessage response = await client.SendAsync(request);
@@ -33,7 +34,6 @@ namespace InfiniteMeals
                 var kitchensString = await content.ReadAsStringAsync();
                 JObject foodbanks = JObject.Parse(kitchensString);
                 this.Kitchens.Clear();
-
 
                 foreach (var k in foodbanks["result"]["result"])
                 {
@@ -57,25 +57,23 @@ namespace InfiniteMeals
 
                     });
                 }
-
                 kitchensListView.ItemsSource = Kitchens;
             }
 
         }
 
-        public MainPage()
+        public MainPage(UserLoginSession userSessionInformation)
         {
             InitializeComponent();
-
+            userSesh = userSessionInformation;
             kitchensListView.RefreshCommand = new Command(() =>
             {
                 GetKitchens();
                 kitchensListView.IsRefreshing = false;
             });
-
             kitchensListView.ItemSelected += Handle_ItemTapped();
-
         }
+
 
         protected override async void OnAppearing()
         {
@@ -94,15 +92,10 @@ namespace InfiniteMeals
             if (e.SelectedItem == null) return;
             ((ListView)sender).SelectedItem = null;
 
-
             // do something with the selection
             var foodbank = e.SelectedItem as KitchensModel;
-
-
             parseFoods(foodbank.foodbank_id);
-
-
-            await Navigation.PushAsync(new SelectMealOptions(foodbank.foodbank_id, foodbank.foodbank_name, foodbank.foodbank_zip));
+            await Navigation.PushAsync(new SelectMealOptions(foodbank.foodbank_id, foodbank.foodbank_name, foodbank.foodbank_zip, userSesh));
         }
 
 
@@ -110,7 +103,6 @@ namespace InfiniteMeals
         {
             return Math.Sqrt(pos1*pos1 + pos2*pos2);
         }
-
 
 
 

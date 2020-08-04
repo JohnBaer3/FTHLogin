@@ -155,8 +155,8 @@ namespace InfiniteMeals
             };
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true);
-            //MainPage mainPage = (MainPage)Navigation.NavigationStack[0];
-            await Navigation.PushAsync(new MainPage());
+            var mainPage = new MainPage(userSessionInformation);
+            await Navigation.PushAsync(mainPage);
 
             //This is to change "login" button to "logout" button. Not implemented
             //mainPage.updateLoginButton();

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using InfiniteMeals.Meals.Model;
 using Newtonsoft.Json;
 using Xamarin.Forms;
+using InfiniteMeals.Model.Database;
+
 
 
 
@@ -35,6 +37,7 @@ namespace InfiniteMeals
     {
         OrderInfo currentOrder = new OrderInfo();
         ObservableCollection<MealsModel> mealsOrdered = new ObservableCollection<MealsModel>();
+        UserLoginSession userSesh = new UserLoginSession();
 
         double totalCostsForMeals = 0;
         double calculatedTaxAmount = 0;
@@ -51,10 +54,11 @@ namespace InfiniteMeals
 
 
 
-        public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string kitchen_zipcode)
+        public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string kitchen_zipcode, UserLoginSession userLoginSession)
         {
             InitializeComponent();
 
+            userSesh = userLoginSession;
             kitchenZipcode = kitchen_zipcode;
             mealsOrdered = meals;
 
