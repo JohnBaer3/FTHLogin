@@ -13,6 +13,9 @@ namespace InfiniteMeals.Meals.Model
         public string id { get; set; }
         public string foodbank_id { get; set; }
         public int order_qty { get; set; }
+        public int delivery { get; set; }
+        public int pickup { get; set; }
+
         public int qty {
             get { return order_qty; }
             set

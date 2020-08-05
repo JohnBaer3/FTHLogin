@@ -141,6 +141,8 @@ namespace InfiniteMeals
                         foodbank_id = foodbankID,
                         id = k["food_id"].ToString(),
                         food_name = k["fl_name"].ToString(),
+                        delivery = Int32.Parse((string)k["delivery"]),
+                        pickup = Int32.Parse((string)k["pickup"]),
                         qty = 0
                     });
                 }
@@ -158,10 +160,7 @@ namespace InfiniteMeals
             myProperty = foodbank_name;
             BindingContext = this;
             Console.WriteLine("foodbank id " + foodbank_id);
-            foodbankID = "08" + foodbank_id.Substring(2) +"?"; //This is due to a formatting error in the db, "800-..." is converted to "080-..." to match the foodbank ids in the inventory_filter API
-
-            Console.WriteLine(foodbankID);
-
+            foodbankID = foodbank_id +"?";
             kitchenZipcode = zipcode;
 
             FindMeals(foodbankID, "");

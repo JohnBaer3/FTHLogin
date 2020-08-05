@@ -45,15 +45,18 @@ namespace InfiniteMeals
                     string dayString = DateTime.Today.DayOfWeek.ToString().ToLower();
                     string togetherString = "fb_" + dayString + "_time";
                     string deliveryTime = "";
+                    string pickupTime = "";
 
                     if (k[togetherString].ToString() == "")
                     {
                         deliveryTime = "Not open today";
+                        pickupTime = "Not open today";
                     }
                     else
                     {
                         var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(k[togetherString].ToString());
                         deliveryTime = values["delivery"];
+                        pickupTime = values["order"];
                     }
 
                     this.Kitchens.Add(new KitchensModel()
@@ -63,13 +66,15 @@ namespace InfiniteMeals
                         tag_line = k["fb_tag_line"].ToString(),
                         foodbank_zip = k["fb_zipcode"].ToString(),
                         foodbank_address = k["fb_address1"].ToString(),
-                        open_hours = deliveryTime
-
+                        delivery_hours = deliveryTime,
+                        pickup_hours = pickupTime,
+                        delivery = Int32.Parse((string)k["fb_delivery"]),
+                        pickup = Int32.Parse((string)k["fb_pickup"])
                     });
+                    
                 }
                 kitchensListView.ItemsSource = Kitchens;
             }
-
         }
 
         public MainPage(UserLoginSession userSessionInformation)

@@ -16,13 +16,18 @@
                         <Label Text="{Binding tag_line}" HorizontalOptions="StartAndExpand" FontSize="Medium" FontAttributes="Italic" Opacity="{Binding opacity}"/>
                         
                         <StackLayout Orientation="Horizontal">
-                            <Image Source="truck.png" WidthRequest="20" HeightRequest="20"/>
-                            <Image Source="walking.png" WidthRequest="20" HeightRequest="20"/>
+                            <Image x:Name="deliveryOptionIcon" Opacity="{Binding delivery}" Source="truck.png" WidthRequest="20" HeightRequest="20"/>
+                            <Image x:Name="pickupOptionIcon" Opacity="{Binding pickup}" Source="walking.png" WidthRequest="20" HeightRequest="20"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Foodbank Hours: " FontAttributes="Bold" FontSize="Micro" Opacity="{Binding opacity}"/>
-                            <Label Text="{Binding open_hours}" FontSize="Micro" Opacity="{Binding opacity}"/>
+                            <Label Text="Delivery Hours: " FontAttributes="Bold" FontSize="Micro" Opacity="{Binding opacity}"/>
+                            <Label Text="{Binding delivery_hours}" FontSize="Micro" Opacity="{Binding opacity}"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Pickup Hours: " FontAttributes="Bold" FontSize="Micro" Opacity="{Binding opacity}"/>
+                            <Label Text="{Binding pickup_hours}" FontSize="Micro" Opacity="{Binding opacity}"/>
                         </StackLayout>
                     </StackLayout>
                 </ViewCell>

@@ -23,7 +23,6 @@ namespace InfiniteMeals
         const string loginURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/account/"; // api to log in; need email + hashed password at the end of link
         public HttpClient client = new HttpClient(); // client to handle all api calls
 
-
         public Login()
         {
             InitializeComponent();
@@ -38,7 +37,6 @@ namespace InfiniteMeals
             }
             else
             {
-
                 var accountSalt = await retrieveAccountSalt(this.loginEmail.Text);
                 //var accountPass = await retrieveAccountSalt(this.loginEmail.Text);
                 System.Diagnostics.Debug.WriteLine("account salt: " + accountSalt.result[0]);
@@ -61,9 +59,7 @@ namespace InfiniteMeals
                 {
                     await DisplayAlert("Error", "An account with that email does not exist", "OK");
                 }
-
             }
-
         }
 
         // logs the user into the app 
@@ -109,8 +105,6 @@ namespace InfiniteMeals
                     return null;
 
                 }
-
-
             }
             return null;
 
