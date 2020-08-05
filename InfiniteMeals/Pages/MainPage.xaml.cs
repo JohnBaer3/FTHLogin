@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using Xamarin.Forms.Internals;
 using InfiniteMeals.Model.Database;
-
+using Newtonsoft.Json;
 
 namespace InfiniteMeals
 {
@@ -38,13 +38,23 @@ namespace InfiniteMeals
                 foreach (var k in foodbanks["result"]["result"])
                 {
                     Boolean businessIsOpen;
-                    //string accepting_hours;
 
                     int dayOfWeekIndex = getDayOfWeekIndex(DateTime.Today);
                     string day = getDayOfWeekFromIndex(dayOfWeekIndex);
 
                     string dayString = DateTime.Today.DayOfWeek.ToString().ToLower();
                     string togetherString = "fb_" + dayString + "_time";
+                    string deliveryTime = "";
+
+                    if (k[togetherString].ToString() == "")
+                    {
+                        deliveryTime = "Not open today";
+                    }
+                    else
+                    {
+                        var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(k[togetherString].ToString());
+                        deliveryTime = values["delivery"];
+                    }
 
                     this.Kitchens.Add(new KitchensModel()
                     {
@@ -53,7 +63,7 @@ namespace InfiniteMeals
                         tag_line = k["fb_tag_line"].ToString(),
                         foodbank_zip = k["fb_zipcode"].ToString(),
                         foodbank_address = k["fb_address1"].ToString(),
-                        open_hours = k[togetherString].ToString()
+                        open_hours = deliveryTime
 
                     });
                 }

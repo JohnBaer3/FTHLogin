@@ -26,7 +26,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We will use your camera to scan the credit card</string>
 	<key>CFBundleVersion</key>
-	<string>18</string>
+	<string>20</string>
 	<key>CFBundleName</key>
 	<string>Feed The Hungry</string>
 	<key>CFBundleShortVersionString</key>

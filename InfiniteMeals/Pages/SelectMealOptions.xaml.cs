@@ -97,27 +97,22 @@ namespace InfiniteMeals
         {
             int positionToRemove = currentFilters.IndexOf(toRemove);
             String updatedFilter = currentFilters.Substring(0, positionToRemove) + currentFilters.Substring(positionToRemove + toRemove.Length, currentFilters.Length - positionToRemove - toRemove.Length);
-            Console.WriteLine(updatedFilter);
             return updatedFilter;
         }
-
 
 
         protected async Task FindMeals(string foodbank_id, string url)
         {
             NoMealsLabel.IsVisible = false;
-
             var request = new HttpRequestMessage();
 
             if (url == "")
             {
                 request.RequestUri = new Uri("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/inventory_filter/" + foodbankID);
-                Console.WriteLine("Next foodbankID " + foodbank_id);
             }
             else
             {
                 request.RequestUri = new Uri(url);
-                Console.WriteLine("other url " + url);
             }
 
             request.Method = HttpMethod.Get;

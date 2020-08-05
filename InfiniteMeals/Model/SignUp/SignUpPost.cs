@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
+//Converts C# values into json, before sending it to the DB
+
 namespace InfiniteMeals.Model.SignUp {
 
     // object to send to database when user attempts to sign up 
@@ -28,5 +30,23 @@ namespace InfiniteMeals.Model.SignUp {
 
         [JsonProperty("Password")]
         public string Password { get; set; }
+
+        //[JsonProperty("City")]
+        //public string City { get; set; }
+
+        //[JsonProperty("State")]
+        //public string State { get; set; }
+
+        //[JsonProperty("Street")]
+        //public string Street { get; set; }
+
+        //[JsonProperty("Zipcode")]
+        //public string Zipcode { get; set; }
+
+        //[JsonProperty("Latitude")]
+        //public double Latitude { get; set; }
+
+        //[JsonProperty("Longitude")]
+        //public double Longitude { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace InfiniteMeals.Kitchens.Model
         public string description { get; set; }
         public string zipcode { get; set; }
         public string delivery_period { get; set; }
+        public string order_period { get; set; }
         public bool isOpen { get; set; }
         public string status { get; set; }
         public string statusColor { get; set; }

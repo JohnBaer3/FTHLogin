@@ -27,7 +27,7 @@
                     <Entry x:Name="confirmPasswordEntry" Placeholder="confirm password" WidthRequest="150" />
                 </StackLayout>
 
-                <Picker x:Name="referralPicker" Grid.Column="1" Grid.Row="5" VerticalOptions="Center" Title="Referral">
+                <Picker x:Name="referralPicker" Grid.Column="1" Grid.Row="5" HorizontalOptions="Center" Title="Referral" WidthRequest="300">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
                             <x:String>Website</x:String>

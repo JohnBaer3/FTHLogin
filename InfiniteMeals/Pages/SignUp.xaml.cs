@@ -30,7 +30,7 @@ namespace InfiniteMeals
 
         public SignUp()
         {
-
+             
             InitializeComponent();
 
         }
@@ -104,8 +104,6 @@ namespace InfiniteMeals
                                             {
                                                 System.Diagnostics.Debug.WriteLine("capturing login");
                                                 captureLoginSession(loginAttempt);
-
-
                                             }
                                         }
                                         else
@@ -113,9 +111,6 @@ namespace InfiniteMeals
                                             await DisplayAlert("Error", "There was an error logging in", "OK");
                                             return;
                                         }
-
-
-
                                     }
                                     else
                                     {
@@ -335,6 +330,11 @@ namespace InfiniteMeals
                 Referral = this.referralPicker.SelectedItem.ToString(),
                 Password = this.passwordEntry.Text
 
+                //City = this.City.Text,
+                //Street = this.Address.Text,
+                //Zipcode = this.Zipcode.Text,
+                //Latitude = 0.0000,
+                //Longitude = 0.0000
             };
 
             string signUpContentJson = JsonConvert.SerializeObject(signUpContent); // convert to json 
@@ -439,7 +439,9 @@ namespace InfiniteMeals
                 FirstName = loginResponse.Result.Result[0].FirstName,
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
-                Email = loginResponse.Result.Result[0].UserEmail
+                Email = loginResponse.Result.Result[0].UserEmail,
+
+                //City = loginResponse.Result.Result[0].City
             };
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true); // update the login status for the app

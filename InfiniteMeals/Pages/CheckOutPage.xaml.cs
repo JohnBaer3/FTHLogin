@@ -16,7 +16,6 @@ namespace InfiniteMeals
 {
     public partial class OrderInfo
     {
-
         public string city = "";
         public string customer_id = "";
         public string delivery_date = "";
@@ -50,8 +49,6 @@ namespace InfiniteMeals
         public Label addressLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 12, HeightRequest = 25, MinimumWidthRequest = 170, Text = "123 Santa Clara, CA 95120", Margin = 5 };
         public Button pickupCheckoutButton = new Button() { FontSize = 10, Text = "Pickup Checkout", Margin = 5, BackgroundColor=Color.White, HeightRequest=50 };
         public Image truckImage = new Image() { VerticalOptions = LayoutOptions.Center, Source = "truck.png", HeightRequest = 40, MinimumWidthRequest = 130 };
-        public Label confirmDeliveryLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 15, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Confirm Delivery", Margin = 5 };
-
 
 
         public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string kitchen_zipcode, UserLoginSession userLoginSession)
@@ -65,7 +62,7 @@ namespace InfiniteMeals
             SetupUI();
 
             currentOrder.kitchen_id = foodbank_id;
-            currentOrder.customer_id = "12345";
+            currentOrder.customer_id = userSesh.ID.ToString();
             currentOrder.phone = "408 466 7899";
             currentOrder.street = "Mission St";
             currentOrder.city = "Santa Cruz";
@@ -74,11 +71,9 @@ namespace InfiniteMeals
             currentOrder.delivery_note = "Test delivery note";
             currentOrder.latitude = 45.6;
             currentOrder.longitude = 45.6;
-            currentOrder.delivery_date = "today";
-            currentOrder.order_type = "delivery";
+            currentOrder.delivery_date = timePicker.Time.ToString();
 
             int total = 0;
-
 
             foreach (var meal in mealsOrdered)
             {
@@ -92,9 +87,7 @@ namespace InfiniteMeals
                     };
                 }
             }
-            
             currentOrder.totalAmount = total;
-
         }
 
         TimePicker timePicker = new TimePicker
@@ -158,7 +151,6 @@ namespace InfiniteMeals
             grid3.Children.Add(pickupCheckoutButton);
 
             grid4.Children.Add(truckImage);
-            grid4.Children.Add(confirmDeliveryLabel);
 
             grid5.Children.Add(timePicker);
 
@@ -180,12 +172,12 @@ namespace InfiniteMeals
                 Content = grid
             };
 
-            var checkoutButton = new Button() { FontSize = 10, Text = "Delivery Checkout", Margin = 5, BackgroundColor = Color.White, HeightRequest = 50 };
-            checkoutButton.Clicked += Handle_Clicked();
-
+            var deliveryButton = new Button() { FontSize = 10, Text = "Delivery Checkout", Margin = 5, BackgroundColor = Color.White, HeightRequest = 50 };
+            deliveryButton.Clicked += Handle_Clicked("delivery");
+            pickupCheckoutButton.Clicked += Handle_Clicked("pickup");
 
             mainStackLayout.Children.Add(scrollView);
-            mainStackLayout.Children.Add(checkoutButton);
+            mainStackLayout.Children.Add(deliveryButton);
 
             var copyrightLabel = new Label() { Text = "© Infinite Options v1.2", FontSize = 10, HorizontalOptions = LayoutOptions.Center,  Margin = new Thickness(20, 10, 20, 10) };
 
@@ -197,8 +189,9 @@ namespace InfiniteMeals
             };
         }
 
-        private EventHandler Handle_Clicked()
+        private EventHandler Handle_Clicked(String deliveryOrCheckout)
         {
+            currentOrder.order_type = deliveryOrCheckout;
             return placeOrder;
         }
 
@@ -209,8 +202,10 @@ namespace InfiniteMeals
 
             await Application.Current.SavePropertiesAsync();
             await sendOrderRequest(currentOrder);
+            await DisplayAlert("Order Placed!", "Thank you for shopping with Feed the Hungry!", "OK");
+            await Navigation.PushAsync(new MainPage(userSesh));
         }
-            
+
 
         void Auto_Fill(string key, Entry location)
         {
@@ -234,7 +229,7 @@ namespace InfiniteMeals
                 request.Method = HttpMethod.Post;
                 request.Content = content;
                 var httpResponse = await httpClient.PostAsync("https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/add_order", content);
-                Console.WriteLine("This is the response " + httpResponse);
+                Console.WriteLine("This is the order's response " + httpResponse);
             }
         }
 
@@ -242,57 +237,5 @@ namespace InfiniteMeals
         {
             throw new NotImplementedException();
         }
-
-        private String FormatCurrency(String number)
-        {
-            if (!number.Contains("."))
-            {
-                return number + ".00";
-            }
-            if (number[number.Length - 2] == '.')
-            {
-                return number + "0";
-            }
-            return number;
-        }
-
-        private string formatZipcode(string zipcode)
-        {
-            if (zipcode == "95120")
-            {
-                return "Almaden";
-            }
-            if (zipcode == "95135")
-            {
-                return "Evergreen";
-            }
-            if (zipcode == "95060")
-            {
-                return "Santa Cruz";
-            }
-            return "Other";
-        }
-
-        private string parseAreaToZipcode(string zipcode)
-        {
-            if (zipcode == "Almaden")
-            {
-                return "95120";
-            }
-            if (zipcode == "Evergreen")
-            {
-                return "95135";
-            }
-            if (zipcode == "Santa Cruz")
-            {
-                return "95060";
-            }
-            if (zipcode == "Other")
-            {
-                return "90000";
-            }
-            return "";
-        }
-
     }
 }

@@ -9,15 +9,10 @@ namespace InfiniteMeals.Meals.Model
 
         public string imageString { get; set; }
         public string food_name { get; set; }
-        public string description { get; set; }
         public string price { get; set; }
         public string id { get; set; }
         public string foodbank_id { get; set; }
-        public string foodbank_name { get; set; }
         public int order_qty { get; set; }
-        public int[] orderList { get; set; }
-
-        //public int meal_qty;
         public int qty {
             get { return order_qty; }
             set

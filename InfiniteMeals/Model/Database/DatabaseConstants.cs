@@ -8,7 +8,7 @@ namespace InfiniteMeals.Model.Database {
 
     // database constants for when the database is created
     public static class DatabaseConstants {
-        public const string DatabaseFilename = "PTYD_DB.db3";
+        public const string DatabaseFilename = "FTH_DB.db3";
 
         public const SQLite.SQLiteOpenFlags flags =
             SQLite.SQLiteOpenFlags.ReadWrite | // open database in read/write

@@ -21,7 +21,7 @@
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Devliery Period: " FontAttributes="Bold" FontSize="Micro" Opacity="{Binding opacity}"/>
+                            <Label Text="Foodbank Hours: " FontAttributes="Bold" FontSize="Micro" Opacity="{Binding opacity}"/>
                             <Label Text="{Binding open_hours}" FontSize="Micro" Opacity="{Binding opacity}"/>
                         </StackLayout>
                     </StackLayout>
