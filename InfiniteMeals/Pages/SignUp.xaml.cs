@@ -24,9 +24,9 @@ namespace InfiniteMeals
         public Boolean termsOfServiceChecked = true;
         public Boolean weeklyUpdatesChecked = false;
         public HttpClient client = new HttpClient();
-        public const string signUpApi = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup";
+        public const string signUpApi = "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup";
         const string accountSaltURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt/"; // api to get account salt; need email at the end of link
-        const string loginURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/account/"; // api to log in; need email + hashed password at the end of link
+        const string loginURL = "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/login"; // api to log in; need email + hashed password at the end of link
 
         public SignUp()
         {
@@ -92,25 +92,24 @@ namespace InfiniteMeals
                                             await DisplayAlert("Error", "That email is already taken", "OK");
                                             return;
                                         }
-                                        System.Diagnostics.Debug.WriteLine("pre salt: " + this.emailEntry.Text);
-                                        AccountSalt accountSalt = await retrieveAccountSalt(this.emailEntry.Text);
-                                        System.Diagnostics.Debug.WriteLine("salt: " + accountSalt.result[0]);
 
-                                        if (accountSalt != null && accountSalt.result.Count != 0)
-                                        {
-                                            var loginAttempt = await login(this.emailEntry.Text, this.passwordEntry.Text, accountSalt);
-                                            System.Diagnostics.Debug.WriteLine("logging in");
-                                            if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
-                                            {
-                                                System.Diagnostics.Debug.WriteLine("capturing login");
-                                                captureLoginSession(loginAttempt);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            await DisplayAlert("Error", "There was an error logging in", "OK");
-                                            return;
-                                        }
+                                        await Navigation.PopToRootAsync();
+
+                                        //var loginAttempt = await login(this.emailEntry.Text, this.passwordEntry.Text, accountSalt);
+                                        //System.Diagnostics.Debug.WriteLine("logging in");
+                                        //if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
+                                        //{
+                                        //    System.Diagnostics.Debug.WriteLine("capturing login");
+                                        //    captureLoginSession(loginAttempt);
+                                            
+                                        //}
+                                        //else
+                                        //{
+                                        //    await DisplayAlert("Error", "There was an error logging in", "OK");
+                                        //    return;
+                                        //}
+
+
                                     }
                                     else
                                     {
@@ -322,22 +321,23 @@ namespace InfiniteMeals
         {
             SignUpPost signUpContent = new SignUpPost
             { // SignUpPost object to send to database 
-                Email = this.emailEntry.Text,
                 FirstName = this.firstNameEntry.Text,
                 LastName = this.lastNameEntry.Text,
+                Address1 = this.Address.Text,
+                Address2 = "Address 2",
+                City = this.City.Text,
+                State = "CA",
+                Zipcode = "86545",
                 PhoneNumber = this.phoneNumberEntry.Text,
-                WeeklyUpdates = this.weeklyUpdatesChecked.ToString(),
-                Referral = this.referralPicker.SelectedItem.ToString(),
-                Password = this.passwordEntry.Text
-
-                //City = this.City.Text,
-                //Street = this.Address.Text,
-                //Zipcode = this.Zipcode.Text,
-                //Latitude = 0.0000,
-                //Longitude = 0.0000
+                Email = this.emailEntry.Text,
+                Password = this.passwordEntry.Text,
+                UserIsCustomer = 1,
+                UserIsDonor = 1,
+                UserIsAdmin = 1,
+                UserIsFoodbank = 1
             };
 
-            string signUpContentJson = JsonConvert.SerializeObject(signUpContent); // convert to json 
+        string signUpContentJson = JsonConvert.SerializeObject(signUpContent); // convert to json 
             var httpContent = new StringContent(signUpContentJson, Encoding.UTF8, "application/json"); // convert to string content
 
             try
@@ -380,51 +380,36 @@ namespace InfiniteMeals
 
         // logs the user into the app 
         // returns a LoginResponse if successful and null if unsuccessful 
-        public async Task<LoginResponse> login(string userEmail, string userPassword, AccountSalt accountSalt)
+        public async Task<LoginResponse> login(string userEmail, string userPassword)
         {
-            const string deviceBrowserType = "Mobile";
-            var deviceIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault();
-            if (deviceIpAddress != null)
+            try
             {
-                try
-                {
+                LoginPost loginPostContent = new LoginPost()
+                { // object that contains ip address and browser type; will be converted into a json object 
+                    Email = userEmail,
+                    Password = userPassword
+                };
 
-                    LoginPost loginPostContent = new LoginPost()
-                    { // object that contains ip address and browser type; will be converted into a json object 
-                        ipAddress = deviceIpAddress.ToString(),
-                        browserType = deviceBrowserType
-                    };
+                string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
 
-                    string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
-
-                    var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
+                var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
 
 
-                    SHA512 sHA512 = new SHA512Managed();
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].passwordSalt)); // take the password and account salt to generate hash
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
 
+                var response = await client.PostAsync(loginURL, httpContent); // try to post to database
 
-                    var response = await client.PostAsync(loginURL + userEmail + "/" + hashedPassword, httpContent); // try to post to database
+                if (response.Content != null)
+                { // post was successful
+                    var responseContent = await response.Content.ReadAsStringAsync();
 
-
-                    if (response.Content != null)
-                    { // post was successful
-                        var responseContent = await response.Content.ReadAsStringAsync();
-
-                        var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-
-                        return loginResponse;
-
-                    }
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
+                    var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+                    return loginResponse;
 
                 }
-
-
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in login.xaml " + e);
             }
             return null;
         }
@@ -435,13 +420,11 @@ namespace InfiniteMeals
 
             var userSessionInformation = new UserLoginSession
             { // object to send into local database
-                UserUid = loginResponse.Result.Result[0].UserUid,
-                FirstName = loginResponse.Result.Result[0].FirstName,
+                UserUid = loginResponse.Result.Result[0].UserId,
+                FirstName = loginResponse.Result.Result[0].UserFirstName,
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
                 Email = loginResponse.Result.Result[0].UserEmail,
-
-                //City = loginResponse.Result.Result[0].City
             };
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true); // update the login status for the app

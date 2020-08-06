@@ -10,43 +10,50 @@ namespace InfiniteMeals.Model.SignUp {
     // object to send to database when user attempts to sign up 
     // link: https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup
     public class SignUpPost {
-        [JsonProperty("Email")]
-        public string Email { get; set; }
 
-        [JsonProperty("FirstName")]
+        [JsonProperty("id")]
+        public string CustomerId { get; set; }
+
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
 
-        [JsonProperty("LastName")]
+        [JsonProperty("last_name")]
         public string LastName { get; set; }
 
-        [JsonProperty("PhoneNumber")]
+        [JsonProperty("address1")]
+        public string Address1 { get; set; }
+
+        [JsonProperty("address2")]
+        public string Address2 { get; set; }
+
+        [JsonProperty("city")]
+        public string City { get; set; }
+
+        [JsonProperty("state")]
+        public string State { get; set; }
+
+        [JsonProperty("zipcode")]
+        public String Zipcode { get; set; }
+
+        [JsonProperty("phone")]
         public string PhoneNumber { get; set; }
 
-        [JsonProperty("WeeklyUpdates")]
-        public string WeeklyUpdates { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
 
-        [JsonProperty("Referral")]
-        public string Referral { get; set; }
+        [JsonProperty("user_is_customer")]
+        public int UserIsCustomer { get; set; }
 
-        [JsonProperty("Password")]
-        public string Password { get; set; }
+        [JsonProperty("user_is_donor")]
+        public int UserIsDonor { get; set; }
 
-        //[JsonProperty("City")]
-        //public string City { get; set; }
+        [JsonProperty("user_is_admin")]
+        public int UserIsAdmin { get; set; }
 
-        //[JsonProperty("State")]
-        //public string State { get; set; }
+        [JsonProperty("user_is_foodbank")]
+        public int UserIsFoodbank { get; set; }
 
-        //[JsonProperty("Street")]
-        //public string Street { get; set; }
-
-        //[JsonProperty("Zipcode")]
-        //public string Zipcode { get; set; }
-
-        //[JsonProperty("Latitude")]
-        //public double Latitude { get; set; }
-
-        //[JsonProperty("Longitude")]
-        //public double Longitude { get; set; }
+        [JsonProperty("password")]
+        public String Password { get; set; }
     }
 }

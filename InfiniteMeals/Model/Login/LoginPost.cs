@@ -12,10 +12,10 @@ namespace InfiniteMeals.Model.Login {
 
     class LoginPost {
 
-        [JsonProperty("ip_address")]
-        public string ipAddress { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
 
-        [JsonProperty("browser_type")]
-        public string browserType { get; set; }
+        [JsonProperty("password")]
+        public string Password { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace InfiniteMeals
     public partial class Login : ContentPage
     {
         const string accountSaltURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt/"; // api to get account salt; need email at the end of link
-        const string loginURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/account/"; // api to log in; need email + hashed password at the end of link
+        const string loginURL = "https://dc3so1gav1.execute-api.us-west-1.amazonaws.com/dev/api/v2/login"; // api to log in; need email + hashed password at the end of link
         public HttpClient client = new HttpClient(); // client to handle all api calls
 
         public Login()
@@ -37,77 +37,48 @@ namespace InfiniteMeals
             }
             else
             {
-                var accountSalt = await retrieveAccountSalt(this.loginEmail.Text);
-                //var accountPass = await retrieveAccountSalt(this.loginEmail.Text);
-                System.Diagnostics.Debug.WriteLine("account salt: " + accountSalt.result[0]);
-                if (accountSalt != null && accountSalt.result.Count != 0)
-                { // make sure the account salt exists 
-                    var loginAttempt = await login(this.loginEmail.Text, this.loginPassword.Text, accountSalt);
-                    System.Diagnostics.Debug.WriteLine("login attempt: " + loginAttempt.GetType());
-                    if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
-                    { // make sure the login attempt was successful
-                        captureLoginSession(loginAttempt);
-                        await Navigation.PopAsync();
+                
+                var loginAttempt = await login(this.loginEmail.Text, this.loginPassword.Text);
+                if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
+                { // make sure the login attempt was successful
+                    captureLoginSession(loginAttempt);
+                    await Navigation.PopAsync();
 
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "Wrong password was entered", "OK");
-                    }
-                }
-                else
-                {
-                    await DisplayAlert("Error", "An account with that email does not exist", "OK");
                 }
             }
         }
 
         // logs the user into the app 
         // returns a LoginResponse if successful and null if unsuccessful 
-        public async Task<LoginResponse> login(string userEmail, string userPassword, AccountSalt accountSalt)
+        public async Task<LoginResponse> login(string userEmail, string userPassword)
         {
-            const string deviceBrowserType = "Mobile";
-            var deviceIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault();
-            if (deviceIpAddress != null)
+            try
             {
-                try
-                {
+                LoginPost loginPostContent = new LoginPost()
+                { // object that contains ip address and browser type; will be converted into a json object 
+                    Email = userEmail,
+                    Password = userPassword
+                };
 
-                    LoginPost loginPostContent = new LoginPost()
-                    { // object that contains ip address and browser type; will be converted into a json object 
-                        ipAddress = deviceIpAddress.ToString(),
-                        browserType = deviceBrowserType
-                    };
+                string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
 
-                    string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
+                var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
+                var response = await client.PostAsync(loginURL, httpContent); // try to post to database
 
-                    var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
+                if (response.Content != null)
+                { // post was successful
+                    var responseContent = await response.Content.ReadAsStringAsync();
 
-
-                    SHA512 sHA512 = new SHA512Managed();
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].passwordSalt)); // take the password and account salt to generate hash
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
-
-                    var response = await client.PostAsync(loginURL + userEmail + "/" + hashedPassword, httpContent); // try to post to database
-
-                    if (response.Content != null)
-                    { // post was successful
-                        var responseContent = await response.Content.ReadAsStringAsync();
-
-                        var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                        return loginResponse;
-
-                    }
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine("Exception message: " + e.Message);
-                    return null;
+                    var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+                    return loginResponse;
 
                 }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine("Error in login.xaml " + e);
+            }
             return null;
-
         }
 
         // uses account salt api to retrieve the user's account salt
@@ -138,15 +109,15 @@ namespace InfiniteMeals
 
         public async void captureLoginSession(LoginResponse loginResponse)
         {
-
             var userSessionInformation = new UserLoginSession
             { // object to send into local database
-                UserUid = loginResponse.Result.Result[0].UserUid,
-                FirstName = loginResponse.Result.Result[0].FirstName,
+                UserUid = loginResponse.Result.Result[0].UserId,
+                FirstName = loginResponse.Result.Result[0].UserFirstName,
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
                 Email = loginResponse.Result.Result[0].UserEmail
             };
+
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true);
             var mainPage = new MainPage(userSessionInformation);
