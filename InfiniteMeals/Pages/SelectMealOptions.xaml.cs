@@ -19,6 +19,8 @@ namespace InfiniteMeals
         public string myProperty { get; } = " ";
         UserLoginSession userSesh = new UserLoginSession();
         public ObservableCollection<MealsModel> Meals = new ObservableCollection<MealsModel>();
+        public ObservableCollection<MealsModel> DeliveryMeals = new ObservableCollection<MealsModel>();
+        public ObservableCollection<MealsModel> PickupMeals = new ObservableCollection<MealsModel>();
 
         private string foodbankID;
         private string kitchenZipcode;
@@ -131,10 +133,12 @@ namespace InfiniteMeals
                 }
                 todaysDate = todaysDate.Replace("/0", "/");
                 this.Meals.Clear();
+                this.DeliveryMeals.Clear();
+                this.PickupMeals.Clear();
                 foreach (var k in foodbanks["result"]["result"])
                 {
                     string cleanedUpImageString = cleanUpImageString(k["fl_image"].ToString());
-                    this.Meals.Add(new MealsModel()
+                    MealsModel newMeal = new MealsModel()
                     {
                         imageString = cleanedUpImageString,
                         price = k["fl_value_in_dollars"].ToString(),
@@ -144,7 +148,25 @@ namespace InfiniteMeals
                         delivery = Int32.Parse((string)k["delivery"]),
                         pickup = Int32.Parse((string)k["pickup"]),
                         qty = 0
-                    });
+                    };
+
+                    if(newMeal.delivery == 1 && newMeal.pickup == 1)
+                    {
+                        this.Meals.Add(newMeal);
+                    }else if (newMeal.delivery == 1)
+                    {
+                        this.DeliveryMeals.Add(newMeal);
+                    }else if (newMeal.pickup == 1)
+                    {
+                        this.PickupMeals.Add(newMeal);
+                    }
+                }
+                foreach(var meal in DeliveryMeals){
+                    Meals.Add(meal);
+                }
+                foreach (var meal in PickupMeals)
+                {
+                    Meals.Add(meal);
                 }
                 mealsListView.ItemsSource = Meals;
             }
@@ -224,6 +246,13 @@ namespace InfiniteMeals
                 {
                     mealObject.qty += 1;
                     mealOrdersCount += 1;
+                    if (PickupMeals.Contains(mealObject))
+                    {
+                        //foreach(var deliveryMeal in DeliveryMeals)
+                        //{
+                        //    deliveryMeal.
+                        //}
+                    }
                 }
             }
         }
