@@ -43,15 +43,15 @@ namespace InfiniteMeals
         string kitchenZipcode;
         
         public Label cartReviewLabel = new Label() { VerticalOptions = LayoutOptions.Center, HorizontalTextAlignment = TextAlignment.Center, FontSize = 21, HeightRequest = 45, MinimumWidthRequest = 170, Text = "Cart Review", Margin = 5};
-        public Label nameLabel = new Label() { VerticalOptions = LayoutOptions.Center, HorizontalTextAlignment = TextAlignment.Center, FontSize = 18, HeightRequest = 45, MinimumWidthRequest = 170, Text = "Second Harvest Food Bank", Margin = 8 };
+        public Label nameLabel = new Label() { VerticalOptions = LayoutOptions.Center, HorizontalTextAlignment = TextAlignment.Center, FontSize = 18, HeightRequest = 45, MinimumWidthRequest = 170, Text = "Default Food Bank", Margin = 8 };
         public Image logoImage = new Image() { VerticalOptions = LayoutOptions.Center, Source = "logo.png", HeightRequest = 60, MinimumWidthRequest = 170};
         public Label confirmLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 15, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Confirm Pickup", Margin = 0 };
-        public Label addressLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 12, HeightRequest = 25, MinimumWidthRequest = 170, Text = "123 Santa Clara, CA 95120", Margin = 5 };
+        public Label addressLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 12, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Default Address", Margin = 5 };
         public Button pickupCheckoutButton = new Button() { FontSize = 10, Text = "Pickup Checkout", Margin = 5, BackgroundColor=Color.White, HeightRequest=50 };
         public Image truckImage = new Image() { VerticalOptions = LayoutOptions.Center, Source = "truck.png", HeightRequest = 40, MinimumWidthRequest = 130 };
 
 
-        public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string kitchen_zipcode, UserLoginSession userLoginSession)
+        public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string foodbankName, string kitchen_zipcode, UserLoginSession userLoginSession)
         {
             InitializeComponent();
 
@@ -60,17 +60,18 @@ namespace InfiniteMeals
             mealsOrdered = meals;
 
             SetupUI();
+            
 
             currentOrder.kitchen_id = foodbank_id;
             currentOrder.customer_id = userSesh.ID.ToString();
-            currentOrder.phone = "408 466 7899";
-            currentOrder.street = "Mission St";
-            currentOrder.city = "Santa Cruz";
-            currentOrder.state = "CA";
-            currentOrder.zipcode = "95060";
+            currentOrder.phone = userSesh.PhoneNumber;
+            currentOrder.street = userSesh.Street;
+            currentOrder.city = userSesh.City;
+            currentOrder.state = userSesh.State;
+            currentOrder.zipcode = userSesh.Zipcode;
             currentOrder.delivery_note = "Test delivery note";
-            currentOrder.latitude = 45.6;
-            currentOrder.longitude = 45.6;
+            currentOrder.latitude = 0.00;
+            currentOrder.longitude = 0.00;
             currentOrder.delivery_date = timePicker.Time.ToString();
 
             int total = 0;

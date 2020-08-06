@@ -150,170 +150,6 @@ namespace InfiniteMeals
 
         }
 
-        // handler for terms of service button
-        private void termsOfServiceButtonClicked(object sender, EventArgs e)
-        {
-            ImageButton termsOfServiceButton = (ImageButton)sender;
-            termsOfServiceChecked = !termsOfServiceChecked; // change boolean for termsOfServiceChecked
-            if (termsOfServiceChecked)
-            {
-                termsOfServiceButton.Source = "checkboxSelected"; // change image to selected if checked
-            }
-            else
-            {
-                termsOfServiceButton.Source = "checkboxUnselected"; // change image to unselected if unchecked
-            }
-        }
-
-        // handler for weekly updates button 
-        private void weeklyUpdatesButtonClicked(object sender, EventArgs e)
-        {
-            ImageButton weeklyUpdatesButton = (ImageButton)sender;
-            weeklyUpdatesChecked = !weeklyUpdatesChecked; // change boolean for weeklyUpdatesChecked
-            if (weeklyUpdatesChecked)
-            {
-                weeklyUpdatesButton.Source = "checkboxSelected"; // change image to selected if checked
-            }
-            else
-            {
-                weeklyUpdatesButton.Source = "checkboxUnselected"; // change image to unselected if checked
-            }
-
-        }
-
-        // handler for first name entry 
-        //private void firstNameEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry firstNameEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(firstNameEntry.Text))
-        //    { // if first name entry is filled 
-        //        this.firstNameWarning.IsVisible = false; // hide warning 
-        //        //if (!String.IsNullOrEmpty(lastNameEntry.Text))
-        //        //{
-        //        //    this.lastNameWarning.IsVisible = false;
-        //        //}
-        //    }
-        //    else
-        //    {
-        //        this.firstNameWarning.IsVisible = true; // display warning if unfilled
-        //    }
-        //}
-
-        //private void lastNameEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry lastNameEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(lastNameEntry.Text))
-        //    { // if last name entry is filled 
-        //        this.lastNameWarning.IsVisible = false; // hide warning 
-        //    }
-        //    else
-        //    {
-        //        this.lastNameWarning.IsVisible = true; // display warning if unfilled
-        //    }
-        //}
-
-        //private void emailEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry emailEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(emailEntry.Text))
-        //    {
-        //        if (validateEmail(emailEntry.Text))
-        //        {
-        //            this.emailWarning.IsVisible = false;
-        //            if (!String.IsNullOrEmpty(this.confirmEmailEntry.Text) && emailEntry.Text == this.confirmEmailEntry.Text)
-        //            {
-        //                this.confirmEmailWarning.IsVisible = false;
-        //            }
-        //            else
-        //            {
-        //                this.confirmEmailWarning.Text = "Emails do not match";
-        //                this.confirmEmailWarning.IsVisible = true;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            this.emailWarning.Text = "Email is not valid";
-        //            this.emailWarning.IsVisible = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this.emailWarning.IsVisible = true;
-        //    }
-
-        //}
-
-        //private void confirmEmailEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry confirmEmailEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(this.emailEntry.Text) || !String.IsNullOrEmpty(confirmEmailEntry.Text))
-        //    {
-        //        if (this.emailEntry.Text == confirmEmailEntry.Text)
-        //        {
-        //            this.confirmEmailWarning.IsVisible = false;
-        //        }
-        //        else
-        //        {
-        //            this.confirmEmailWarning.IsVisible = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this.confirmEmailWarning.IsVisible = true;
-        //    }
-        //}
-
-        //private void passwordEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry passwordEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(passwordEntry.Text))
-        //    {
-        //        this.passwordWarning.IsVisible = false;
-        //        if (!String.IsNullOrEmpty(this.confirmPasswordEntry.Text) && passwordEntry.Text != this.confirmPasswordEntry.Text)
-        //        {
-        //            this.confirmPasswordWarning.Text = "Passwords do not match";
-        //            this.confirmPasswordWarning.IsVisible = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this.passwordWarning.IsVisible = true;
-        //    }
-        //}
-
-        //private void confirmPasswordEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry confirmPasswordEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(this.passwordEntry.Text) || !String.IsNullOrEmpty(confirmPasswordEntry.Text))
-        //    {
-        //        if (this.passwordEntry.Text == confirmPasswordEntry.Text)
-        //        {
-        //            this.confirmPasswordWarning.IsVisible = false;
-
-        //        }
-        //        else
-        //        {
-        //            this.confirmPasswordWarning.IsVisible = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this.confirmPasswordWarning.IsVisible = true;
-        //    }
-        //}
-
-        //private void phoneNumberEntryUnfocused(object sender, FocusEventArgs e)
-        //{
-        //    Entry phoneNumberEntry = (Entry)sender;
-        //    if (!String.IsNullOrEmpty(phoneNumberEntry.Text) && phoneNumberEntry.Text.Length == 10)
-        //    { // if phone number entry is filled completely
-        //        this.phoneNumberWarning.IsVisible = false; // hide warning 
-        //    }
-        //    else
-        //    {
-        //        this.phoneNumberWarning.IsVisible = true; // display warning if unfilled
-        //    }
-        //}
 
         // signs the user up based on the information filled in the entries
         // returns a SignUpResponse if successful and null if unsuccessful
@@ -323,11 +159,11 @@ namespace InfiniteMeals
             { // SignUpPost object to send to database 
                 FirstName = this.firstNameEntry.Text,
                 LastName = this.lastNameEntry.Text,
-                Address1 = this.Address.Text,
-                Address2 = "Address 2",
+                Address1 = this.Address1.Text,
+                Address2 = this.Address2.Text,
                 City = this.City.Text,
-                State = "CA",
-                Zipcode = "86545",
+                State = this.State.Text,
+                Zipcode = this.Zipcode.Text,
                 PhoneNumber = this.phoneNumberEntry.Text,
                 Email = this.emailEntry.Text,
                 Password = this.passwordEntry.Text,
@@ -339,7 +175,6 @@ namespace InfiniteMeals
 
         string signUpContentJson = JsonConvert.SerializeObject(signUpContent); // convert to json 
             var httpContent = new StringContent(signUpContentJson, Encoding.UTF8, "application/json"); // convert to string content
-
             try
             {
                 var response = await client.PostAsync(signUpApi, httpContent); // send to database
@@ -422,9 +257,15 @@ namespace InfiniteMeals
             { // object to send into local database
                 UserUid = loginResponse.Result.Result[0].UserId,
                 FirstName = loginResponse.Result.Result[0].UserFirstName,
+                LastName = loginResponse.Result.Result[0].UserLastName,
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
-                Email = loginResponse.Result.Result[0].UserEmail,
+                PhoneNumber = loginResponse.Result.Result[0].UserPhone,
+                City = loginResponse.Result.Result[0].UserCity,
+                State = loginResponse.Result.Result[0].UserState,
+                Street = loginResponse.Result.Result[0].UserAddress1,
+                Zipcode = loginResponse.Result.Result[0].UserZipcode.ToString(),
+                Email = loginResponse.Result.Result[0].UserEmail
             };
             await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
             App.setLoggedIn(true); // update the login status for the app

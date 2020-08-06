@@ -113,8 +113,14 @@ namespace InfiniteMeals
             { // object to send into local database
                 UserUid = loginResponse.Result.Result[0].UserId,
                 FirstName = loginResponse.Result.Result[0].UserFirstName,
+                LastName = loginResponse.Result.Result[0].UserLastName,
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
+                PhoneNumber = loginResponse.Result.Result[0].UserPhone,
+                City = loginResponse.Result.Result[0].UserCity,
+                State = loginResponse.Result.Result[0].UserState,
+                Street = loginResponse.Result.Result[0].UserAddress1,
+                Zipcode = loginResponse.Result.Result[0].UserZipcode.ToString(),
                 Email = loginResponse.Result.Result[0].UserEmail
             };
 

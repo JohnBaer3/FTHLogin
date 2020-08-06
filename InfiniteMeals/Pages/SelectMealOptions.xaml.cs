@@ -191,7 +191,8 @@ namespace InfiniteMeals
             }
             else
             {
-                var secondPage = new CheckOutPage(Meals, foodbankID, kitchenZipcode, userSesh);
+                foodbankID = foodbankID.Substring(0, foodbankID.Length - 1);
+                var secondPage = new CheckOutPage(Meals, foodbankID, foodbankName, kitchenZipcode, userSesh);
                 await Navigation.PushAsync(secondPage);
             }
         }
@@ -227,19 +228,6 @@ namespace InfiniteMeals
             }
         }
 
-        void ImageButton_Clicked(System.Object sender, System.EventArgs e)
-        {
-        }
-
-
-        //public string createUrl()
-        //{
-        //    DateTime dateTime = DateTime.UtcNow.Date;
-        //    var today = dateTime.ToString("yyyyMMdd");
-
-        //    string url = "https://s3-us-west-2.amazonaws.com/ordermealapp/" + today;
-        //    return url;
-        //}
     }
 
 }
