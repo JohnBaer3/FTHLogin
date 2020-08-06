@@ -117,6 +117,8 @@ namespace InfiniteMeals
                 SessionId = loginResponse.LoginAttemptLog.SessionId,
                 LoginId = loginResponse.LoginAttemptLog.LoginId,
                 PhoneNumber = loginResponse.Result.Result[0].UserPhone,
+                Address1 = loginResponse.Result.Result[0].UserAddress1,
+                Address2 = loginResponse.Result.Result[0].UserAddress2,
                 City = loginResponse.Result.Result[0].UserCity,
                 State = loginResponse.Result.Result[0].UserState,
                 Street = loginResponse.Result.Result[0].UserAddress1,

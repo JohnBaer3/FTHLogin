@@ -46,10 +46,11 @@ namespace InfiniteMeals
         public Label nameLabel = new Label() { VerticalOptions = LayoutOptions.Center, HorizontalTextAlignment = TextAlignment.Center, FontSize = 18, HeightRequest = 45, MinimumWidthRequest = 170, Text = "Default Food Bank", Margin = 8 };
         public Image logoImage = new Image() { VerticalOptions = LayoutOptions.Center, Source = "logo.png", HeightRequest = 60, MinimumWidthRequest = 170};
         public Label confirmLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 15, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Confirm Pickup", Margin = 0 };
-        public Label addressLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 12, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Default Address", Margin = 5 };
+        public Label addressLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 12, HeightRequest = 25, WidthRequest = 170, Text = "Default Address", Margin = 5 };
         public Button pickupCheckoutButton = new Button() { FontSize = 10, Text = "Pickup Checkout", Margin = 5, BackgroundColor=Color.White, HeightRequest=50 };
+        public Label confirmDeliveryLabel = new Label() { VerticalOptions = LayoutOptions.Center, FontSize = 15, HeightRequest = 25, MinimumWidthRequest = 170, Text = "Confirm Delivery", Margin = 0 };
         public Image truckImage = new Image() { VerticalOptions = LayoutOptions.Center, Source = "truck.png", HeightRequest = 40, MinimumWidthRequest = 130 };
-
+        public Button deliveryButton = new Button() { FontSize = 10, Text = "Delivery Checkout", Margin = 5, BackgroundColor = Color.White, HeightRequest = 50 };
 
         public CheckOutPage(ObservableCollection<MealsModel> meals, string foodbank_id, string foodbankName, string kitchen_zipcode, UserLoginSession userLoginSession)
         {
@@ -60,7 +61,6 @@ namespace InfiniteMeals
             mealsOrdered = meals;
 
             SetupUI();
-            
 
             currentOrder.kitchen_id = foodbank_id;
             currentOrder.customer_id = userSesh.ID.ToString();
@@ -73,6 +73,9 @@ namespace InfiniteMeals
             currentOrder.latitude = 0.00;
             currentOrder.longitude = 0.00;
             currentOrder.delivery_date = timePicker.Time.ToString();
+
+            nameLabel.Text = foodbankName;
+            addressLabel.Text = userSesh.Address1 + ", " + userSesh.Address2 + ", " + userSesh.Street + ", " + userSesh.City + ", " + userSesh.State + " " + userSesh.Zipcode;
 
             int total = 0;
 
@@ -122,18 +125,27 @@ namespace InfiniteMeals
             var imageLayout = new StackLayout() { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.Center };
             var imageTextLayout = new StackLayout() { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.Center};
 
+            var deliveryOnly = false;
+            var pickupOnly = false;
 
-            foreach (var meal1 in mealsOrdered)
+            foreach (var meal in mealsOrdered)
             {
-                if (meal1.order_qty >= 1)
+                if (meal.order_qty >= 1)
                 {
                     var imageText = new StackLayout() { Orientation = StackOrientation.Vertical, HorizontalOptions=LayoutOptions.Center, MinimumHeightRequest = 0};
-
-                    var mealImage = new Image() { Source = meal1.imageString, HeightRequest = 70, MinimumWidthRequest = 70 };
-                    var mealQuantity = new Label() { Text = meal1.order_qty.ToString(), FontSize = 20, TranslationY = -60, TranslationX = 40, TextColor=Color.White };
+                    var mealImage = new Image() { Source = meal.imageString, HeightRequest = 70, MinimumWidthRequest = 70 };
+                    var mealQuantity = new Label() { Text = meal.order_qty.ToString(), FontSize = 20, TranslationY = 0, TranslationX = 30, TextColor=Color.Black };
                     imageText.Children.Add(mealImage);
                     imageText.Children.Add(mealQuantity);
                     imageLayout.Children.Add(imageText);
+                    if (meal.delivery == 0)
+                    {
+                        pickupOnly = true;
+                    }
+                    else if (meal.pickup == 0)
+                    {
+                        deliveryOnly = true;
+                    }
                 }
             }
 
@@ -143,17 +155,23 @@ namespace InfiniteMeals
             grid1.Children.Add(imageLayout);
             grid1.Children.Add(imageTextLayout);
 
-            grid2.Children.Add(confirmLabel);
-            grid2.Children.Add(addressLabel);
 
-            grid2Half.Children.Add(logoImage);
-            grid2Half.Children.Add(grid2);
+            if (!deliveryOnly)
+            {
+                grid2.Children.Add(confirmLabel);
+                grid2.Children.Add(addressLabel);
+                grid2Half.Children.Add(logoImage);
+                grid2Half.Children.Add(grid2);
+                grid3.Children.Add(pickupCheckoutButton);
+            }
 
-            grid3.Children.Add(pickupCheckoutButton);
-
-            grid4.Children.Add(truckImage);
-
-            grid5.Children.Add(timePicker);
+            if (!pickupOnly)
+            {
+                grid4.Children.Add(confirmDeliveryLabel);
+                grid4.Children.Add(truckImage);
+                grid5.Children.Add(timePicker);
+                grid5.Children.Add(deliveryButton);
+            }
 
             grid.Children.Add(grid1);
             grid.Children.Add(grid2Half);
@@ -173,7 +191,7 @@ namespace InfiniteMeals
                 Content = grid
             };
 
-            var deliveryButton = new Button() { FontSize = 10, Text = "Delivery Checkout", Margin = 5, BackgroundColor = Color.White, HeightRequest = 50 };
+
             deliveryButton.Clicked += Handle_Clicked("delivery");
             pickupCheckoutButton.Clicked += Handle_Clicked("pickup");
 

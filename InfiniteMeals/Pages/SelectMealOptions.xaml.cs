@@ -187,6 +187,7 @@ namespace InfiniteMeals
             Console.WriteLine("foodbank id " + foodbank_id);
             foodbankID = foodbank_id +"?";
             kitchenZipcode = zipcode;
+            foodbankName = foodbank_name;
 
             FindMeals(foodbankID, "");
         }
