@@ -26,6 +26,8 @@ namespace InfiniteMeals
         private string kitchenZipcode;
         private string foodbankName;
         private string currentFilters;
+        private int deliveryCount = 0;
+        private int pickupCount = 0;
 
         private void Vegan_Clicked(object sender, System.EventArgs e)
         {
@@ -147,7 +149,8 @@ namespace InfiniteMeals
                         food_name = k["fl_name"].ToString(),
                         delivery = Int32.Parse((string)k["delivery"]),
                         pickup = Int32.Parse((string)k["pickup"]),
-                        qty = 0
+                        qty = 0,
+                        opacity = 1
                     };
 
                     if(newMeal.delivery == 1 && newMeal.pickup == 1)
@@ -230,13 +233,39 @@ namespace InfiniteMeals
                 {
                     mealObject.qty -= 1;
                     mealOrdersCount -= 1;
+                    if (PickupMeals.Contains(mealObject))
+                    {
+                        pickupCount--;
+                        if (mealObject.qty == 0)
+                        {
+                            if (pickupCount == 0)
+                            {
+                                foreach (var deliveryMeal in DeliveryMeals)
+                                {
+                                    deliveryMeal.opacity = 1;
+                                }
+                            }
+                        }
+                    }else if (DeliveryMeals.Contains(mealObject))
+                    {
+                        deliveryCount--;
+                        if (mealObject.qty == 0)
+                        {
+                            if (deliveryCount == 0)
+                            {
+                                foreach (var pickupMeal in PickupMeals)
+                                {
+                                    pickupMeal.opacity = 1;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
 
         private void addOrders(object sender, System.EventArgs e)
         {
-
             var button = (ImageButton)sender;
             var mealObject = (MealsModel)button.CommandParameter;
 
@@ -244,19 +273,38 @@ namespace InfiniteMeals
             {
                 if (mealObject.qty < 50)
                 {
-                    mealObject.qty += 1;
-                    mealOrdersCount += 1;
                     if (PickupMeals.Contains(mealObject))
                     {
-                        //foreach(var deliveryMeal in DeliveryMeals)
-                        //{
-                        //    deliveryMeal.
-                        //}
+                        if (deliveryCount == 0)
+                        {
+                            mealObject.qty += 1;
+                            mealOrdersCount += 1;
+                            pickupCount++;
+                            foreach (var deliveryMeal in DeliveryMeals)
+                            {
+                                deliveryMeal.opacity = 0.5;
+                            }
+                        }
+                    }else if (DeliveryMeals.Contains(mealObject))
+                    {
+                        if (pickupCount == 0)
+                        {
+                            mealObject.qty += 1;
+                            mealOrdersCount += 1;
+                            deliveryCount++;
+                            foreach (var pickupMeal in PickupMeals)
+                            {
+                                pickupMeal.opacity = 0.5;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mealObject.qty += 1;
+                        mealOrdersCount += 1;
                     }
                 }
             }
         }
-
     }
-
 }
