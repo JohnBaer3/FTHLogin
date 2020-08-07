@@ -155,12 +155,17 @@ namespace InfiniteMeals
         // returns a SignUpResponse if successful and null if unsuccessful
         private async Task<SignUpResponse> signUp()
         {
+            var addressLine2 = "";
+            if (Address2.Text == null)
+            {
+                addressLine2 = "";
+            }
             SignUpPost signUpContent = new SignUpPost
             { // SignUpPost object to send to database 
                 FirstName = this.firstNameEntry.Text,
                 LastName = this.lastNameEntry.Text,
                 Address1 = this.Address1.Text,
-                Address2 = this.Address2.Text,
+                Address2 = addressLine2,
                 City = this.City.Text,
                 State = this.State.Text,
                 Zipcode = this.Zipcode.Text,

@@ -23,7 +23,7 @@ namespace InfiniteMeals
         public ObservableCollection<MealsModel> PickupMeals = new ObservableCollection<MealsModel>();
 
         private string foodbankID;
-        private string kitchenZipcode;
+        private string kitchenAddress;
         private string foodbankName;
         private string currentFilters;
         private int deliveryCount = 0;
@@ -175,7 +175,7 @@ namespace InfiniteMeals
             }
         }
 
-        public SelectMealOptions(string foodbank_id, string foodbank_name, string zipcode, UserLoginSession userLoginSession)
+        public SelectMealOptions(string foodbank_id, string foodbank_name, string foodbank_address, UserLoginSession userLoginSession)
         {
             InitializeComponent();
 
@@ -184,9 +184,8 @@ namespace InfiniteMeals
             SetBinding(TitleProperty, new Binding(foodbank_name));
             myProperty = foodbank_name;
             BindingContext = this;
-            Console.WriteLine("foodbank id " + foodbank_id);
             foodbankID = foodbank_id +"?";
-            kitchenZipcode = zipcode;
+            kitchenAddress = foodbank_address;
             foodbankName = foodbank_name;
 
             FindMeals(foodbankID, "");
@@ -218,7 +217,7 @@ namespace InfiniteMeals
             else
             {
                 foodbankID = foodbankID.Substring(0, foodbankID.Length - 1);
-                var secondPage = new CheckOutPage(Meals, foodbankID, foodbankName, kitchenZipcode, userSesh);
+                var secondPage = new CheckOutPage(Meals, foodbankID, foodbankName, kitchenAddress, userSesh);
                 await Navigation.PushAsync(secondPage);
             }
         }

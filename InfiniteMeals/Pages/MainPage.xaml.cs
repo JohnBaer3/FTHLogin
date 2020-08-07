@@ -110,7 +110,7 @@ namespace InfiniteMeals
             // do something with the selection
             var foodbank = e.SelectedItem as KitchensModel;
             parseFoods(foodbank.foodbank_id);
-            await Navigation.PushAsync(new SelectMealOptions(foodbank.foodbank_id, foodbank.foodbank_name, foodbank.foodbank_zip, userSesh));
+            await Navigation.PushAsync(new SelectMealOptions(foodbank.foodbank_id, foodbank.foodbank_name, foodbank.foodbank_address, userSesh));
         }
 
 
